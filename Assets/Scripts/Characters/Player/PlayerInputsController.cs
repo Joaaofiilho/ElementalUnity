@@ -1,19 +1,12 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Character.Player
+namespace Characters.Player
 {
-    [RequireComponent(typeof(CharacterMovement))]
+    [RequireComponent(typeof(CharacterWalkable))]
     public class PlayerInputsController: MonoBehaviour
     {
-        [SerializeField] private CharacterMovement playerMovement;
-        private IMovable _movable;
-
-        private void Start()
-        {
-            _movable = playerMovement;
-        }
+        [SerializeField] private CharacterWalkable playerWalkable;
 
         //Inputs
         public void Move(InputAction.CallbackContext context)
@@ -21,14 +14,14 @@ namespace Character.Player
             var direction = context.ReadValue<Vector2>();
             direction.y = 0;
         
-            _movable.Move(direction);
+            playerWalkable.Move(direction);
         }
 
         public void Jump(InputAction.CallbackContext context)
         {
             if (context.performed)
             {
-                _movable.Jump();
+                playerWalkable.Jump();
             }
         }
     }

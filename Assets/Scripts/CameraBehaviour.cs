@@ -18,8 +18,8 @@ public class CameraBehaviour : MonoBehaviour
         _newPos.x = transform.position.x;
         StartCoroutine(MoveCamera());
     }
-    
-    IEnumerator MoveCamera()
+
+    private IEnumerator MoveCamera()
     {
         var ellapsedTime = 0f;
 
@@ -29,7 +29,5 @@ public class CameraBehaviour : MonoBehaviour
             ellapsedTime += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
-        
-        Destroy(gameObject);
     }
 }

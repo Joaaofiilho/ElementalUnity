@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Debuffs;
+using UnityEngine;
 
-namespace Character
+namespace Characters
 {
-    public class CharacterMovement : Character, IMovable
+    public class CharacterWalkable : Characters.Character
     {
         [Header("Check references")]
         
@@ -12,7 +13,7 @@ namespace Character
         
         [Header("Movement")]
         private float _horizontalMovementDirection;
-        [SerializeField] private float movementSpeed = 7f;
+        [SerializeField] public float movementSpeed = 7f;
 
         [Header("Jump")]
         [SerializeField] protected float jumpVelocity = 5f;
@@ -21,6 +22,8 @@ namespace Character
         {
             base.Start();
             _groundCheckSize = new Vector2(transform.lossyScale.x, 0.01f);
+            AddDebuff(new DamageOverTimeDebuff(5,  10, 0.5f));
+            AddDebuff(new HeavyDebuff(this, true, 3f));
         }
 
         protected void FixedUpdate()
@@ -28,8 +31,8 @@ namespace Character
             MoveCharacter();
             FaceMovementDirection();
         }
-        
-        //Implemented methods
+
+        //Class methods
         public void Move(Vector2 direction)
         {
             _horizontalMovementDirection = direction.x;
@@ -39,12 +42,10 @@ namespace Character
         {
             if (IsOnGround())
             {
-                Rb.velocity = new Vector2(Rb.velocity.x, jumpVelocity);
+                rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
             }
         }
-
-        //Class methods
-
+        
         private bool IsOnGround()
         {
             var other = Physics2D.OverlapBox(groundReference.transform.position, _groundCheckSize, 0f, whatIsGround);
@@ -55,17 +56,16 @@ namespace Character
         
         private void FaceMovementDirection()
         {
-            if (_horizontalMovementDirection != 0)
-            {
-                var rotation = transform.rotation;
-                transform.rotation = Quaternion.Euler(rotation.x, _horizontalMovementDirection > 0 ? 180 : 0, rotation.z);
-            }
+            if (_horizontalMovementDirection == 0) return;
+            
+            var rotation = transform.rotation;
+            transform.rotation = Quaternion.Euler(rotation.x, _horizontalMovementDirection > 0 ? 180 : 0, rotation.z);
         }
 
         private void MoveCharacter()
         {
-            var velocity = Rb.velocity;
-            Rb.velocity = new Vector2(_horizontalMovementDirection * movementSpeed, velocity.y);
+            var velocity = rb.velocity;
+            rb.velocity = new Vector2(_horizontalMovementDirection * movementSpeed, velocity.y);
         }
     }
 }
