@@ -1,33 +1,42 @@
 ﻿using System.Collections.Generic;
-using Debuffs;
+using Modifiers;
+using Receptors;
 
 namespace Manas
 {
     public abstract class Mana
     {
         public ManaTypes Type;
+        protected Receptor Owner;
+        private readonly List<Modifier> _modifiersToReceptor;
+
+        public Mana(Receptor receptor, ManaTypes type)
+        {
+            Owner = receptor;
+            Type = type;
+            _modifiersToReceptor = new List<Modifier>();
+        }
         
-        protected readonly List<Debuff> DebuffsToCaster;
-
-        protected Mana()
+        //Class methods
+        public void OnManaAttached(Receptor receptor)
         {
-            DebuffsToCaster = new List<Debuff>();
-        }
-
-        public void OnManaAttached(Characters.Character character)
-        {
-            foreach (var debuff in DebuffsToCaster)
+            foreach (var debuff in _modifiersToReceptor)
             {
-                character.AddDebuff(debuff);
+                receptor.AddModifier(debuff);
             }
         }
 
-        public void OnManaDetached(Characters.Character character)
+        public void OnManaDetached(Receptor receptor)
         {
-            foreach (var debuff in DebuffsToCaster)
+            foreach (var debuff in _modifiersToReceptor)
             {
-                character.RemoveDebuff(debuff);
+                receptor.RemoveModifier(debuff);
             }
+        }
+
+        protected void AddModifierToReceptor(Modifier modifier)
+        {
+            _modifiersToReceptor.Add(modifier);
         }
     }
 }

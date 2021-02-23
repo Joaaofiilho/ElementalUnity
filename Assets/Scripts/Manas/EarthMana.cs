@@ -1,21 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using Casters;
 using Characters;
-using Characters.Casters;
-using Debuffs;
+using Modifiers;
+using Receptors;
 
 namespace Manas
 {
     public class EarthMana : Mana
     {
-        public EarthMana(Caster caster)
+        public EarthMana(Receptor receptor) : base(receptor, ManaTypes.Earth)
         {
-            Type = ManaTypes.Earth;
-
-            var owner = caster.Character;
+            var characterWalkable = receptor.GetComponent<CharacterWalkable>();
             
-            if (owner is CharacterWalkable walkable)
-            {
-                DebuffsToCaster.Add(new HeavyDebuff(walkable, false, 0));
+            if(characterWalkable) {
+                AddModifierToReceptor(new HeavyDebuff(characterWalkable));
             }
         }
     }

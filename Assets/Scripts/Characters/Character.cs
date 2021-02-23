@@ -1,28 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using Debuffs;
+using Modifiers;
+using Skills;
 using UnityEngine;
 
 namespace Characters
 {
-    public class Character : MonoBehaviour
+    [RequireComponent(typeof(Rigidbody2D))]
+    public class Character : Modifiable
     {
-        [HideInInspector] public Rigidbody2D rb;
-        private List<Debuff> _activeDebuffs;
+        [Header("Check references")]
+        [SerializeField] private LayerMask whatIsGround;
+        public Transform groundCheck;
+        private Vector2 _groundCheckSize;
+        
+        [Header("Status")]
         [SerializeField] private float health = 100f;
+        [SerializeField] public float attackDamage = 20f;
+        
+        [HideInInspector] public Rigidbody2D rb;
+        private List<Skill> _skills;
 
-        protected virtual void Start()
+        protected override void Start()
         {
-            _activeDebuffs = new List<Debuff>();
+            base.Start();
+            _skills = new List<Skill>();
             rb = GetComponent<Rigidbody2D>();
+            _groundCheckSize = new Vector2(transform.lossyScale.x, 0.01f);
         }
 
-        protected virtual void Update()
+        protected override void Update()
         {
-            foreach (var activeDebuff in _activeDebuffs)
+            base.Update();
+            foreach (var skill in _skills)
             {
-                activeDebuff.OnUpdateDebuff(this, Time.deltaTime);
+                skill.Update(this, Time.deltaTime);
             }
+        }
+
+        public bool IsOnGround()
+        {
+            var other = Physics2D.OverlapBox(groundCheck.transform.position, _groundCheckSize, 0f, whatIsGround);
+            var onGround = other != null;
+
+            return onGround;
         }
 
         public void ChangeGravityScaleBy(float amount)
@@ -35,16 +56,23 @@ namespace Characters
             health -= amount;
         }
 
-        public void AddDebuff(Debuff debuff)
+        public void AddSkill(Skill skill)
         {
-            _activeDebuffs.Add(debuff);
-            debuff.OnDebuffAttached();
+            if (!_skills.Contains(skill))
+            {
+                _skills.Add(skill);
+            }
         }
 
-        public void RemoveDebuff(Debuff debuff)
+        public void RemoveSkill(Skill skill)
         {
-            _activeDebuffs.Remove(debuff);
-            debuff.OnDebuffDetached();
+            _skills.Remove(skill);
+        }
+
+        public void TryToPerformSkill(SkillTypes skillType)
+        {
+            var skill = _skills.Find((s) => s.Type == skillType);
+            skill?.TryToPerform();
         }
     }
 }

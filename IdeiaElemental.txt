@@ -1,0 +1,15 @@
+O personagem principal consegue deixar uma area em circulo parar no tempo/deixar mais lenta no tempo
+O personagem principal consegue ter manas (Receptor) e usar essas manas (Caster)
+Todo Caster é um Receptor, mas nem todo Receptor é um Caster
+
+Toda mana pode ser dada pra um Receptor por um Caster
+Toda mana tem um modificador (Efeito) pro receptor que a tem
+
+Quando o caster usa uma habilidade de uma mana que ele pegou da natureza, o remanescente da mana volta pra natureza (Se tiver natureza), e então a mana aparece novamente no lugar que o caster pegou, só que mais fraca. Tem um tempo de recarga para ganhar força.
+
+Se houver um objeto inanimado receptor por perto, ele rouba a mana para ele se o jogador usar perto, fazendo-o criar vida. Assim tendo que derrotá-lo para obter a mana de volta
+
+Porém o receptor poderá ser destruído enquanto está ganhando força (Ele pode até ter diferentes tipos de efeito dependendo da mana absorvida. A de pedra, por exemplo, pode deixar ele invulnerável enquanto ganha força)
+
+A mana de pedra deixa o receptor pesado, fazendo-o dar golpes mas lentos mas mais poderosos, além da gravidade afetar mais ele por ele ter uma maior massa e também ter pulos menores.
+

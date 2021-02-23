@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Skills;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Characters.Player
@@ -22,6 +23,14 @@ namespace Characters.Player
             if (context.performed)
             {
                 playerWalkable.Jump();
+            }
+        }
+
+        public void SmashSkill(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                playerWalkable.TryToPerformSkill(SkillTypes.Smash);
             }
         }
     }
